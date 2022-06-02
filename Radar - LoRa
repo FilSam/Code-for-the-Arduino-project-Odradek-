@@ -1,0 +1,106 @@
+//C'est le code met en marche le servomoteur avec le capteur d'ultrasons
+et envoit les donnés par LoRa à une autre carte
+#include <Servo.h>
+#include <LoRa.h>
+
+
+
+#define echoPin 9 // attach pin D9 Arduino to pin Echo of HC-SR04
+#define trigPin 10 //attach pin D10 Arduino to pin Trig of HC-SR04
+
+// defines variables
+ Servo myservo;
+long duration; // variable for the duration of sound wave travel
+int distance; // variable for the distance measurement
+String chaine;
+
+void setup() {
+  myservo.attach(2);
+  myservo.write(0);
+  pinMode(trigPin, OUTPUT); // Sets the trigPin as an OUTPUT
+  pinMode(echoPin, INPUT); // Sets the echoPin as an INPUT
+  Serial.begin(9600); // // Serial Communication is starting with 9600 of baudrate speed
+   while (!Serial);
+
+  Serial.println("LoRa Sender");
+
+  if (!LoRa.begin(433E6)) {
+    Serial.println("Starting LoRa failed!");
+    while (1);
+
+}}
+void loop() {
+          myservo.write(180); // Premierement on bouge le servo, apres on calcule la distance entre l'obstacle et le radar   
+          digitalWrite(trigPin, LOW);
+          delayMicroseconds(2);
+          digitalWrite(trigPin, HIGH);
+          delayMicroseconds(10);
+          digitalWrite(trigPin, LOW);
+          duration = pulseIn(echoPin, HIGH);
+          distance = duration * 0.034 / 2; // Le code pour calculer la distance
+          Serial.print("Distance: ");
+          Serial.print(distance);
+          Serial.println(" cm");
+          Serial.print("Sending packet: "); // on envoit les donnés
+         LoRa.beginPacket();
+         LoRa.print(chaine);
+         LoRa.endPacket();
+  delay(1000);
+          myservo.write(90);
+          digitalWrite(trigPin, LOW);
+          delayMicroseconds(2);
+          digitalWrite(trigPin, HIGH);
+          delayMicroseconds(10);
+          digitalWrite(trigPin, LOW);
+          duration = pulseIn(echoPin, HIGH);
+          distance = duration * 0.034 / 2;
+          chaine = String(distance);
+          Serial.print("Distance: ");
+          Serial.print(distance);
+          Serial.println(" cm");
+         Serial.print("Sending packet: "); 
+         LoRa.beginPacket();
+         LoRa.print(chaine);
+         LoRa.endPacket();
+  delay(1000);
+         myservo.write(0);
+         digitalWrite(trigPin, LOW);
+         delayMicroseconds(2);
+         digitalWrite(trigPin, HIGH);
+         delayMicroseconds(10);
+         digitalWrite(trigPin, LOW);
+         duration = pulseIn(echoPin, HIGH);
+         distance = duration * 0.034 / 2;
+         chaine = String(distance);
+         Serial.print("Distance: ");
+         Serial.print(distance);
+         Serial.println(" cm");
+         Serial.print("Sending packet: ");
+         LoRa.beginPacket();
+         LoRa.print(chaine);
+         LoRa.endPacket();
+  delay(1000);
+         myservo.write(90);
+         digitalWrite(trigPin, LOW);
+         delayMicroseconds(2);
+         digitalWrite(trigPin, HIGH);
+         delayMicroseconds(10);
+         digitalWrite(trigPin, LOW);
+         duration = pulseIn(echoPin, HIGH);
+         distance = duration * 0.034 / 2;
+         chaine = String(distance);
+         Serial.print("Distance: ");
+         Serial.print(distance);
+         Serial.println(" cm");
+         Serial.print("Sending packet: "); 
+         LoRa.beginPacket();
+         LoRa.print(chaine);
+         LoRa.endPacket();
+ 
+  delay(1000);
+  
+  
+  
+  
+  
+}
